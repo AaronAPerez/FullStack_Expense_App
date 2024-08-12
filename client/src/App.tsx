@@ -68,7 +68,38 @@ const App = () => {
   };
 
   return (
-    <ChakraProvider>
+    <>
+     <div className="container">
+        <header className="py-2 border-bottom">
+          <h1 className="text-center">
+            EXPENSE TR
+            <FaPiggyBank size={59} color="pink" />
+            CKER
+          </h1>
+        </header>
+        <div className="main">
+          <div className="row">
+            <div className="col-md-4">
+              {/* <h2 className="text-center">New Expense</h2> */}
+              <ExpenseForm
+                onSubmit={(expense) =>
+                  setExpenses([
+                    ...expenses,
+                    { ...expense, id: expenses.length + 1 },
+                  ])
+                }
+              />
+            </div>
+            <div className="col-md-8 pt-2">
+              <ExpenseFilter
+                visibleExpense={(category) => setSelectedCategory(category)}
+              />
+              <ExpenseList expenses={visibleExpenses} onDelete={handleDelete} isLoading={false} error={""} />
+            </div>
+          </div>
+        </div>
+      </div>
+    {/* <ChakraProvider>
       <Box maxWidth="1200px" margin="auto" padding={4}>
         <Flex justifyContent="center" alignItems="center" marginBottom={4}>
           <FaPiggyBank size={40} color="pink" />
@@ -99,7 +130,8 @@ const App = () => {
           </Box>
         </Flex>
       </Box>
-    </ChakraProvider>
+    </ChakraProvider> */}
+    </>
   );
 };
 

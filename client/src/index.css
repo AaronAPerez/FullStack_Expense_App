@@ -1,68 +1,178 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@import url('https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&display=swap');
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+ background-image: url('./images/Money-Benjamin-unsplash.jpg');
+ background-position: center;
+ background-size: cover;
+ background-repeat: no-repeat;
+ background-attachment: fixed;
+ font-family: "Besley", serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+
+.table :not(caption) > * > *, .form-control, .form-select{
+  background-color: #dee5dae5;
+  /* padding-left: 0.4rem;
+  padding-right: 0.4rem; */
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+svg{
+  padding-bottom: 14px;
+  padding-right: 2px;
+} 
+
+td{
+  font-size: large;
+}
+
+.tableHeadFoot {
+  color: #f4f6f2 !important;
+  background-color: #030403 !important;
+}
+
+.text-danger {
+ background-color: #030403;
+}
+
+
+h1.text-center {
+/* color: #f4f6f2; */
+color: #f4f6f2;
+font-size: 3.2rem;
+text-shadow: 2px 2px #0b0e0a;
+font-weight: 600;
+}
+
+.form-label {
+  color: #f4f6f2;
+  font-size: large;
+  text-shadow: 2px 2px #0b0e0a;
+  margin-bottom: 4px;
+}
+
+input, .form-select {
+  border-radius: 0px !important;
+}
+
+
+.wrapper{
+  /* position: fixed; */
+  position: absolute;
+}
+
+.link_wrapper{
+  position: relative;
+}
+
+#addIcon{
+  padding-bottom: 3px;
+}
+
+
+.btn-success{
+  display: block;
+  width: 14rem;
+  height: 2.8rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  color: #fff;
+  letter-spacing: 1px;
+  border: 3px solid #333;
+  transition: all 0.35s;
+}
+
+.icon{
+  width: 50px;
+  height: 50px;
+  border: 3px solid transparent;
+  position: absolute;
+  transform: rotate(45deg);
+  right: 0;
+  top: 0;
+  z-index: -1;
+  transition: all 0.35s;
+}
+
+.icon svg {
+  width: 30px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 15px);
+  transform: rotate(-45deg);
+  fill: #2ecc71;
+  transition: all 0.35s;
+}
+
+.btn-success:hover {
+  width: 20rem;
+  border: 3px solid #2ecc71;
+  background: rgba(0, 114, 0, 0.856);
+  color: #2ecc71;
+}
+
+.btn-success:hover + .icon{
+  border: 3px solid #0b5a2c;
+  right: -25%;
+  background-color: black;
+}
+
+
+.btn-outline-danger {
+  color: red;
+  text-shadow: 1px 1px #0b0e0a;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.5s;
+  position: relative; 
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.btn-outline-danger span {
+  z-index: 2; 
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%; 
+  background-color: #030403;
 }
+
+.btn-outline-danger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.5s;
+  border: 1.5px solid rgb(255, 0, 0);
+  background-color: rgba(255,255,255,0.1);
+}
+
+.btn-outline-danger::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: all 0.5s;
+  border: 1.5px solid rgb(255, 0, 0);
+  background-color: rgba(255,255,255,0.1);
+}
+
+
+.btn-outline-danger:hover::before {
+  transform: rotate(-45deg);
+  background-color: rgba(255,255,255,0);
+}
+
+.btn-outline-danger:hover::after {
+  transform: rotate(45deg);
+  background-color: rgba(255,255,255,0);
+}
+
+
+

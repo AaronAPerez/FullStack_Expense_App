@@ -136,3 +136,5 @@ C:\Users\aaper\Documents\.CodeStack Academy\Fullstack_Product_App\FullStack_Expe
 C:\Users\aaper\Documents\.CodeStack Academy\Fullstack_Product_App\FullStack_Expense_App\api\obj\Debug\net8.0\api.pdb
 C:\Users\aaper\Documents\.CodeStack Academy\Fullstack_Product_App\FullStack_Expense_App\api\obj\Debug\net8.0\api.genruntimeconfig.cache
 C:\Users\aaper\Documents\.CodeStack Academy\Fullstack_Product_App\FullStack_Expense_App\api\obj\Debug\net8.0\ref\api.dll
+C:\Users\aaper\Documents\.CodeStack Academy\Fullstack_Product_App\FullStack_Expense_App\api\bin\Debug\net8.0\package-lock.json
+C:\Users\aaper\Documents\.CodeStack Academy\Fullstack_Product_App\FullStack_Expense_App\api\bin\Debug\net8.0\package.json
