@@ -1,22 +1,8 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-
-import { AddIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../src/constant";
-import React from "react";
+import { FaTrash, FaEdit } from "react-icons/fa";
+import ExpenseForm from "./ExpenseForm";
 
 interface Expense {
   id: number;
@@ -25,65 +11,145 @@ interface Expense {
   category: string;
 }
 
-const ExpenseTable = () => {
-  const [data, setData] = useState<Expense[]>([]);
+const ExpenseTable: React.FC = () => {
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string>("");
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
-  const fetchData = () => {
+  const fetchExpenses = () => {
     setIsLoading(true);
     axios
       .get(BASE_URL)
       .then((response) => {
-        setData(response.data);
+        setExpenses(response.data);
+        setIsLoading(false);
       })
       .catch((error) => {
-        console.log(error);
-        setError(error);
-      })
-      .finally(() => {
+        console.error("Error fetching expenses:", error);
+        setError("Failed to fetch expenses. Please try again.");
         setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchData();
+    fetchExpenses();
   }, []);
 
-  return (
-    <>
-      <Box m={32} shadow={"md"} rounded={"md"}>
-        <Flex justifyContent={"space-between"} px={"5"}>
-          <Heading>Expense List</Heading>
-          <Button color="cyan.300" leftIcon={<AddIcon />}>
-            Add Expense
-          </Button>
-        </Flex>
+  const handleDelete = (id: number) => {
+    axios
+      .delete(`${BASE_URL}/${id}`)
+      .then(() => {
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+      })
+      .catch((error) => {
+        console.error("Error deleting expense:", error);
+        setError("Failed to delete expense. Please try again.");
+      });
+  };
 
-        <TableContainer>
-          <Table variant="striped" colorScheme="cyan">
-            <Thead>
-              <Tr>
-                <Th>Id</Th>
-                <Th>Description</Th>
-                <Th>Amount</Th>
-                <Th>Category</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data.map((expense) => (
-                <Tr key={expense.id}>
-                  <Td>{expense.id}</Td>
-                  <Td>{expense.description}</Td>
-                  <Td>{expense.amount}</Td>
-                  <Td>{expense.category}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </Box>
-    </>
+  const handleSubmit = (expense: Omit<Expense, "id">) => {
+    if (editingExpense) {
+      axios
+        .put(`${BASE_URL}/${editingExpense.id}`, expense)
+        .then((response) => {
+          setExpenses(
+            expenses.map((e) =>
+              e.id === editingExpense.id ? response.data : e
+            )
+          );
+          setIsFormOpen(false);
+          setEditingExpense(null);
+        })
+        .catch((error) => {
+          console.error("Error updating expense:", error);
+          setError("Failed to update expense. Please try again.");
+        });
+    } else {
+      axios
+        .post(BASE_URL, expense)
+        .then((response) => {
+          setExpenses([...expenses, response.data]);
+          setIsFormOpen(false);
+        })
+        .catch((error) => {
+          console.error("Error adding expense:", error);
+          setError("Failed to add expense. Please try again.");
+        });
+    }
+  };
+
+  const handleEdit = (expense: Expense) => {
+    setEditingExpense(expense);
+    setIsFormOpen(true);
+  };
+
+  return (
+    <div className="container mt-5">
+      <h1 className="mb-4">Expense Tracker</h1>
+      <button
+        className="btn btn-primary mb-3"
+        onClick={() => setIsFormOpen(true)}
+      >
+        Add Expense
+      </button>
+
+      {isFormOpen && (
+        <ExpenseForm
+          onSubmit={handleSubmit}
+          onClose={() => {
+            setIsFormOpen(false);
+            setEditingExpense(null);
+          }}
+          expense={editingExpense}
+        />
+      )}
+
+      {error && <div className="alert alert-danger">{error}</div>}
+
+      {isLoading ? (
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Category</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {expenses.map((expense) => (
+              <tr key={expense.id}>
+                <td>{expense.description}</td>
+                <td>${expense.amount.toFixed(2)}</td>
+                <td>{expense.category}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-outline-primary me-2"
+                    onClick={() => handleEdit(expense)}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => handleDelete(expense.id)}
+                  >
+                    <FaTrash />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
   );
 };
 

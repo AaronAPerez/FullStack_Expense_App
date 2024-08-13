@@ -1,186 +1,88 @@
-import { z } from "zod";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  VStack,
-  Input,
-  useToast,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Select,
-} from "@chakra-ui/react";
-import { BASE_URL } from "../src/constant";
-import axios from "axios";
+import { z } from "zod";
+import categories from "../src/categories";
 
-const schema = z
-  .object({
-    description: z
-      .string()
-      .trim()
-      .min(1, { message: "Required field - Enter at least one character" }),
-    amount: z.number({ message: "Required field - Enter at least one number" }),
-    category: z.string(),
-  })
-  .refine((data) => data.category !== "Select a Category", {
-    message: "Required Field - Select a Category from drop down options",
-    path: ["category"],
-  });
+const schema = z.object({
+  description: z.string().min(1, { message: "Description is required" }),
+  amount: z.number({ required_error: "Amount is required" }).min(0.01, { message: "Amount must be greater than 0" }),
+  category: z.string().refine((val) => val !== "Select a Category", {
+    message: "Please select a category",
+  }),
+});
 
 type FormData = z.infer<typeof schema>;
 
-export interface ExpenseFormProps {
-  isOpen: boolean;
+interface ExpenseFormProps {
+  onSubmit: (data: FormData) => void;
   onClose: () => void;
-  fetchExpense: () => void;
-  currentData?: FormData;
+  expense?: FormData | null;
 }
 
-const ExpenseForm = ({
-  isOpen,
-  onClose,
-  fetchExpense,
-  currentData,
-}: ExpenseFormProps) => {
-  const toast = useToast();
-
+const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSubmit, onClose, expense }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: currentData,
+    defaultValues: expense || undefined,
   });
 
-  const onSubmit = (data: FormData) => {
-    if (currentData) {
-      editExpense(data);
-    } else {
-      addExpense(data);
-    }
-  };
-
-  const editExpense = (data: FormData) => {
-    axios
-      .put(`${BASE_URL}/${currentData}`, data)
-      // .put(`${BASE_URL}/${currentData?.id}`, data)
-      .then(() => {
-        onClose();
-        fetchExpense();
-        toast({
-          title: "Expense Updated.",
-          description: "Expense updated successfully.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        toast({
-          title: "Error",
-          description: "Failed to update expense.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      });
-  };
-
-  const addExpense = (data: FormData) => {
-    axios
-      .post(`${BASE_URL}/Expense`, data)
-      .then(() => {
-        onClose();
-        fetchExpense();
-        toast({
-          title: "Expense Added.",
-          description: "Expense Added Successfully",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        toast({
-          title: "Error",
-          description: "Failed to add expense.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      });
+  const onSubmitHandler = (data: FormData) => {
+    onSubmit(data);
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{currentData ? "Edit Expense" : "Add Expense"}</ModalHeader>
-        <ModalCloseButton />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalBody>
-            <VStack spacing={4}>
-              <FormControl isInvalid={!!errors.description}>
-                <FormLabel>Description</FormLabel>
-                <Input
-                  {...register("description")}
-                  placeholder="Enter description"
-                />
-                <FormErrorMessage>
-                  {errors.description && errors.description.message}
-                </FormErrorMessage>
-              </FormControl>
+    <form onSubmit={handleSubmit(onSubmitHandler)} className="mb-3">
+      <div className="mb-3">
+        <label htmlFor="description" className="form-label">Description</label>
+        <input
+          {...register("description")}
+          id="description"
+          type="text"
+          className={`form-control ${errors.description ? "is-invalid" : ""}`}
+        />
+        {errors.description && <div className="invalid-feedback">{errors.description.message}</div>}
+      </div>
 
-              <FormControl isInvalid={!!errors.amount}>
-                <FormLabel>Amount</FormLabel>
-                <Input
-                  {...register("amount", { valueAsNumber: true })}
-                  type="number"
-                  placeholder="Enter amount"
-                />
-                <FormErrorMessage>
-                  {errors.amount && errors.amount.message}
-                </FormErrorMessage>
-              </FormControl>
+      <div className="mb-3">
+        <label htmlFor="amount" className="form-label">Amount</label>
+        <input
+          {...register("amount", { valueAsNumber: true })}
+          id="amount"
+          type="number"
+          step="0.01"
+          className={`form-control ${errors.amount ? "is-invalid" : ""}`}
+        />
+        {errors.amount && <div className="invalid-feedback">{errors.amount.message}</div>}
+      </div>
 
-              <FormControl isInvalid={!!errors.category}>
-                <FormLabel>Category</FormLabel>
-                <Select {...register("category")} placeholder="Select a Category">
-                  <option value="Food">Food</option>
-                  <option value="Transportation">Transportation</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Utilities">Utilities</option>
-                  <option value="Other">Other</option>
-                </Select>
-                <FormErrorMessage>
-                  {errors.category && errors.category.message}
-                </FormErrorMessage>
-              </FormControl>
-            </VStack>
-          </ModalBody>
+      <div className="mb-3">
+        <label htmlFor="category" className="form-label">Category</label>
+        <select
+          {...register("category")}
+          id="category"
+          className={`form-select ${errors.category ? "is-invalid" : ""}`}
+        >
+          <option value="Select a Category">Select a Category</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+        {errors.category && <div className="invalid-feedback">{errors.category.message}</div>}
+      </div>
 
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="green" type="submit">
-              {currentData ? "Update" : "Add"}
-            </Button>
-          </ModalFooter>
-        </form>
-      </ModalContent>
-    </Modal>
+      <button type="submit" className="btn btn-primary me-2">
+        {expense ? "Update" : "Add"} Expense
+      </button>
+      <button type="button" className="btn btn-secondary" onClick={onClose}>
+        Cancel
+      </button>
+    </form>
   );
 };
 
