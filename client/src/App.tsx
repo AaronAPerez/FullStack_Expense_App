@@ -1,11 +1,15 @@
-import React from 'react';
-import ExpenseTable from '../components/ExpenseTable';
+import { ChakraProvider } from '@chakra-ui/react';
+import ExpenseTable from './components/ExpenseTable';
 
-const App: React.FC = () => {
+const App = () => {
+
+  
   return (
-    <div className="App">
-      <ExpenseTable />
-    </div>
+    <>
+      <ChakraProvider>
+        <ExpenseTable />
+      </ChakraProvider>
+    </>
   );
 };
 
