@@ -1,5 +1,5 @@
 import React from 'react';
-import ExpenseTable from '../components/ExpenseTable';
+import ExpenseTable from './components/ExpenseTable';
 
 const App: React.FC = () => {
   return (

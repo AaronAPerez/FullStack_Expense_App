@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../src/constant";
+import { BASE_URL } from "../constant";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import ExpenseForm from "./ExpenseForm";
 
-interface Expense {
+export interface Expense {
   id: number;
   description: string;
   amount: number;
   category: string;
 }
 
-const ExpenseTable: React.FC = () => {
+const ExpenseTable = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -21,7 +21,7 @@ const ExpenseTable: React.FC = () => {
   const fetchExpenses = () => {
     setIsLoading(true);
     axios
-      .get(BASE_URL)
+      .get(BASE_URL + "Expense")
       .then((response) => {
         setExpenses(response.data);
         setIsLoading(false);
@@ -37,9 +37,10 @@ const ExpenseTable: React.FC = () => {
     fetchExpenses();
   }, []);
 
+
   const handleDelete = (id: number) => {
     axios
-      .delete(`${BASE_URL}/${id}`)
+      .delete(`${BASE_URL}+"Expense/"+${id}`)
       .then(() => {
         setExpenses(expenses.filter((expense) => expense.id !== id));
       })
