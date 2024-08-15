@@ -19,7 +19,7 @@ import {
   Skeleton,
   SkeletonCircle
 } from "@chakra-ui/react";
-import ColorModeSwitch from "./ColorModeSwitch";
+import ColorModeSwitch from ".ColorModeSwitch";
 import { AddIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -27,10 +27,12 @@ import { BASE_URL } from "../constant";
 
 interface Expense {
   id: number;
-  name: string;
-  price: number;
+  // name: string;
+  // price: number;
   description: string;
-  isInStore: boolean;
+  price: number;
+
+ category: string;
 }
 
 const ExpenseSkeleton = () => {
@@ -56,10 +58,12 @@ const ExpenseSkeleton = () => {
             <Thead>
               <Tr>
                 <Th><Skeleton>Id</Skeleton></Th>
-                <Th><Skeleton>Name</Skeleton></Th>
+                {/* <Th><Skeleton>Name</Skeleton></Th> */}
                 <Th><Skeleton>Description</Skeleton></Th>
-                <Th><Skeleton>IsinStock</Skeleton></Th>
-                <Th isNumeric><Skeleton>Price</Skeleton></Th>
+                {/* <Th><Skeleton>IsinStock</Skeleton></Th> */}
+                <Th isNumeric><Skeleton>Amount</Skeleton></Th>
+                <Th><Skeleton>Category</Skeleton></Th>
+                {/* <Th isNumeric><Skeleton>Price</Skeleton></Th> */}
               </Tr>
             </Thead>
             <Tbody>
@@ -69,12 +73,13 @@ const ExpenseSkeleton = () => {
                   <Td>
                     <HStack>
                       <SkeletonCircle>AD</SkeletonCircle>
-                      <Text><Skeleton>Expense Name</Skeleton></Text>
+                      <Td><Skeleton>Expense Description</Skeleton></Td>
+                      {/* <Text><Skeleton>Expense Name</Skeleton></Text> */}
                     </HStack>
                   </Td>
 
                 
-                  <Td><Skeleton>Expense Description</Skeleton></Td>
+                  <Td><Skeleton>Expense Amount</Skeleton></Td>
                   <Td>
 
                     <Badge><Skeleton>Yes</Skeleton></Badge>

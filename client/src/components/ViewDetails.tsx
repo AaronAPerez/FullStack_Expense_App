@@ -35,7 +35,7 @@ const ViewDetails = ({isOpen, onClose, currentData}:ViewDetailProps) => {
                     {currentData.name}
                 </Heading>
                 <Heading fontSize={20}>
-                    ${currentData.price}
+                    ${currentData.amount}
                 </Heading>
                 <Text>
                     {currentData.description}

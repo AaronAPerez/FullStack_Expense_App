@@ -30,9 +30,9 @@ import { AddIcon, DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../constant";
-import ExpenseSkeleton from "./ExpenseSkeleton";
 import ExpenseForm from "./ExpenseForm";
 import ViewDetails from "./ViewDetails";
+import ExpenseSkeleton from "./ExpenseSkeleton";
 
 export interface Expense {
   id: number;
@@ -78,8 +78,8 @@ const ExpenseTable = () => {
   const getExpense = (id: number) => {
     axios
       .get(BASE_URL + "Expense/" + id)
-      .then((res) => {
-        setCurrentData(res.data);
+      .then((response) => {
+        setCurrentData(response.data);
         
         onOpen();
       })
@@ -115,8 +115,8 @@ const ExpenseTable = () => {
 
     const handleViewDetail = (id:number) => {
       axios.get<Expense>(BASE_URL+"Expense/"+id)
-      .then(res => {
-        setCurrentData(res.data)
+      .then(response => {
+        setCurrentData(response.data)
         onViewDialogOpen()
       }).catch(error => {
         console.log(error);
@@ -145,10 +145,11 @@ const ExpenseTable = () => {
             <Thead>
               <Tr>
                 <Th>Id</Th>
-                <Th>Name</Th>
+                {/* <Th>Name</Th> */}
                 <Th>Description</Th>
-                <Th>Is In Stock</Th>
-                <Th isNumeric>Price</Th>
+                {/* <Th>Is In Stock</Th> */}
+                <Th isNumeric>Amount</Th>
+                <Th>Category</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -157,16 +158,18 @@ const ExpenseTable = () => {
                   <Td>{expense.id}</Td>
                   <Td>
                     <HStack>
-                      <Avatar size={"sm"} name={expense.name} />
-                      <Text>{expense.name}</Text>
+                      <Avatar size={"sm"} description={expense.description} />
+                      <Text>{expense.description}</Text>
                     </HStack>
                   </Td>
 
-                  <Td>{expense.description}</Td>
-                  <Td>
+                  {/* <Td>{expense.description}</Td> */}
+                  {/* <Td>
                     <Badge>{expense.isInStore ? "Yes" : "No"}</Badge>
-                  </Td>
-                  <Td>{expense.price}</Td>
+                  </Td> */}
+                  <Td>{expense.amount}</Td>
+                  {/* <Td>{expense.price}</Td> */}
+                  <Td>{expense.category}</Td>
                   <Td>
                     <HStack>
                       <EditIcon
