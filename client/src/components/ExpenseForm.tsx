@@ -43,63 +43,63 @@ const ExpenseForm = ({
   });
 
   const onSave = () => {
-    axios.post(BASE_URL+"Expense", expense).then(response => {
-     onClose();
-     fetchExpense();
-    }).catch(error => {
-      console.log(error);
-    })
+//     axios.post(BASE_URL+"Expense", expense).then(response => {
+//      onClose();
+//      fetchExpense();
+//     }).catch(error => {
+//       console.log(error);
+//     })
   
 
-}
-  //   if(currentData?.id)
-  //   {
-  //     editExpense()
-  //   }else{
-  //     addExpense()
-  //   }
+// }
+    if(currentData?.id)
+    {
+      editExpense()
+    }else{
+      addExpense()
+    }
 
-  // };
+  };
 
-  // const editExpense = () => {
-  //   axios
-  //     .put(BASE_URL + "Expense/" + currentData?.id,expense)
-  //     .then(() => {
-  //       onClose();
-  //       fetchExpense();
-  //       toast({
-  //         title: "Expense Updated.",
-  //         description: "Expense Updated Successfully",
-  //         status: "success",
-  //         duration: 3000,
-  //         isClosable: true,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const editExpense = () => {
+    axios
+      .put(BASE_URL + "Expense/" + currentData?.id,expense)
+      .then(() => {
+        onClose();
+        fetchExpense();
+        toast({
+          title: "Expense Updated.",
+          description: "Expense Updated Successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  // const addExpense = () => {
-  //   axios
-  //     .post(BASE_URL + "Expense", expense)
-  //     .then((response) => {
-  //       onClose();
-  //       fetchExpense();
-  //       toast({
-  //         title: "Expense Added.",
-  //         description: "Expense Added Successfully",
-  //         status: "success",
-  //         duration: 3000,
-  //         isClosable: true,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
+  const addExpense = () => {
+    axios
+      .post(BASE_URL + "Expense", expense)
+      .then((response) => {
+        onClose();
+        fetchExpense();
+        toast({
+          title: "Expense Added.",
+          description: "Expense Added Successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-  //   console.log(expense);
-  // };
+    console.log(expense);
+  };
 
   return (
     <>
