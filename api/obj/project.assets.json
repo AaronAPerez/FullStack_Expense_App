@@ -4517,7 +4517,6 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.EntityFrameworkCore >= 8.0.8",
-      "Microsoft.EntityFrameworkCore.Relational >= 8.0.7",
       "Microsoft.EntityFrameworkCore.SqlServer >= 8.0.7",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.7",
       "Swashbuckle.AspNetCore >= 6.4.0"
@@ -4529,11 +4528,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\aaper\\Documents\\.CodeStack Academy\\Fullstack_Product_App\\FullStack_Expense_App\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\aaper\\Documents\\.CodeStack Academy\\Fullstack_Product_App\\FullStack_Expense_App\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "c:\\Users\\aaper\\Documents\\.CodeStack Academy\\Fullstack_Product_App\\FullStack_Expense_App\\api\\api.csproj",
+      "projectPath": "C:\\Users\\aaper\\Documents\\.CodeStack Academy\\Fullstack_Product_App\\FullStack_Expense_App\\api\\api.csproj",
       "packagesPath": "C:\\Users\\aaper\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\aaper\\Documents\\.CodeStack Academy\\Fullstack_Product_App\\FullStack_Expense_App\\api\\obj\\",
+      "outputPath": "C:\\Users\\aaper\\Documents\\.CodeStack Academy\\Fullstack_Product_App\\FullStack_Expense_App\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\aaper\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -4568,10 +4567,6 @@
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[8.0.8, )"
-          },
-          "Microsoft.EntityFrameworkCore.Relational": {
-            "target": "Package",
-            "version": "[8.0.7, )"
           },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",

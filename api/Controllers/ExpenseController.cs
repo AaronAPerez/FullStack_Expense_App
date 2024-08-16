@@ -45,59 +45,107 @@ public class ExpenseController : ControllerBase
         return NotFound("Expense Not Created");
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<ActionResult> Delete(int id)
-    {
-       var expense = await _context.Expenses.FindAsync(id);
-       if(expense == null)
-       {
-            return NotFound("Expense Not Found");
-       }
+        [HttpGet("{id}")]
 
-       _context.Remove(expense);
-
-       var result = await _context.SaveChangesAsync();
-
-       if (result > 0) 
-       {
-        return Ok("Expense deleted successfully");
-       }
-       return BadRequest("Unable to delete expense");
-    }
-
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<Expense>> GetExpense(int id)
+    public async Task<IActionResult> GetExpenses(int id)
     {
         var expense = await _context.Expenses.FindAsync(id);
-        if(expense == null)
+        if(expense is null)
         {
-            return NotFound("Expense Not Found");
+            return NotFound();
         }
         return Ok(expense);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> EditExpense(int id, Expense expense)
+   [HttpPut("{id}")]
+
+    public async Task<IActionResult> UpdateExpense(int id, Expense expense)
     {
-        var expenseFromDb = await _context.Expenses.FindAsync(id);
-
-        if (expenseFromDb == null)
+        if(id != expense.Id)
         {
-            return BadRequest("Expense Not Found");
+            return BadRequest();
         }
-        expenseFromDb.Description = expense.Description;
-        expenseFromDb.Amount = expense.Amount;
-        expenseFromDb.Category = expense.Category;
+        _context.Entry(expense).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
 
-        var result = await _context.SaveChangesAsync();
-
-        if (result > 0)
-        {
-            return Ok("Expense updated");
-        }
-        return BadRequest("Unable to update expense");
+        return Ok();
     }
+
+        [HttpDelete("{id}")]
+
+    public async Task<IActionResult> DeleteExpense(int id)
+    {
+        var expense =  await _context.Expenses.FindAsync(id);
+
+        if(expense is null)
+        {
+            return NotFound();
+        }
+
+        _context.Expenses.Remove(expense);
+        await _context.SaveChangesAsync();
+
+        return Ok(expense);
+
+
+    }
+
+
 }
+
+    // [HttpDelete("{id:int}")]
+    // public async Task<ActionResult> Delete(int id)
+    // {
+    //    var expense = await _context.Expenses.FindAsync(id);
+    //    if(expense == null)
+    //    {
+    //         return NotFound("Expense Not Found");
+    //    }
+
+    //    _context.Remove(expense);
+
+    //    var result = await _context.SaveChangesAsync();
+
+    //    if (result > 0) 
+    //    {
+    //     return Ok("Expense deleted successfully");
+    //    }
+    //    return BadRequest("Unable to delete expense");
+    // }
+
+//     [HttpGet("{id:int}")]
+//     public async Task<ActionResult<Expense>> GetExpense(int id)
+//     {
+//         var expense = await _context.Expenses.FindAsync(id);
+//         if(expense == null)
+//         {
+//             return NotFound("Expense Not Found");
+//         }
+//         return Ok(expense);
+//     }
+
+//     [HttpPut("{id:int}")]
+//     public async Task<IActionResult> EditExpense(int id, Expense expense)
+//     {
+//         var expenseFromDb = await _context.Expenses.FindAsync(id);
+
+//         if (expenseFromDb == null)
+//         {
+//             return BadRequest("Expense Not Found");
+//         }
+//         expenseFromDb.Description = expense.Description;
+//         expenseFromDb.Amount = expense.Amount;
+//         expenseFromDb.Category = expense.Category;
+
+//         var result = await _context.SaveChangesAsync();
+
+//         if (result > 0)
+//         {
+//             return Ok("Expense updated");
+//         }
+//         return BadRequest("Unable to update expense");
+//     }
+// }
 
     //    public int Id { get; set; }
 
