@@ -1,5 +1,5 @@
 import { Select, Box } from "@chakra-ui/react";
-import categories from "../src/categories";
+import categories from "../categories";
 
 interface ExpenseFilterProps {
   onSelectCategory: (category: string) => void;
