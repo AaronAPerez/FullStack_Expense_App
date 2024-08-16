@@ -7,7 +7,7 @@ using api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace api.Controller;
+namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,7 +20,7 @@ public class ExpenseController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Expense>> GetExpenses()
+    public async Task<IEnumerable<Expense>> getExpenses()
     {
         var expenses = await _context.Expenses.AsNoTracking().ToListAsync();
         return expenses;

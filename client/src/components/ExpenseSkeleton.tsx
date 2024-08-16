@@ -20,7 +20,7 @@ import {
   import { AddIcon } from "@chakra-ui/icons";
   import { useEffect, useState } from "react";
   import axios from "axios";
-  import { BASE_URL } from "../src/constant";
+  import { BASE_URL } from "../constant";
 import React from "react";
   
   
