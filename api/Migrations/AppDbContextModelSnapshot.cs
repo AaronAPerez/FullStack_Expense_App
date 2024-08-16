@@ -29,13 +29,17 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("Amount")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    // b.Property<int>("Amount")
+                    //     .HasColumnType("int");
+
                     b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

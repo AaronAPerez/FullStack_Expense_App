@@ -1,26 +1,19 @@
-import { Select, Box } from "@chakra-ui/react";
 import categories from "../categories";
 
-interface ExpenseFilterProps {
+interface FilterProps {
   onSelectCategory: (category: string) => void;
 }
 
-const ExpenseFilter = ({ onSelectCategory }: ExpenseFilterProps) => {
+const ExpenseFilter = ({ onSelectCategory }: FilterProps) => {
   return (
-    <Box mb={4}>
-      <Select
-        placeholder="Filter by Category"
-        onChange={(event) => onSelectCategory(event.target.value)}
-      >
-        <option value="">All Categories</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </Select>
-    </Box>
+    <>
+      <select className="form-select" onChange={(e) => onSelectCategory(e.target.value)}>
+        {categories.map(category => <option key={category} value={category}>{category}</option>)}
+      </select>
+
+    </>
   );
 };
 
 export default ExpenseFilter;
+

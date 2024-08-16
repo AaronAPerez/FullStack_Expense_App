@@ -47,7 +47,7 @@ public class ExpenseController : ControllerBase
 
         [HttpGet("{id}")]
 
-    public async Task<IActionResult> GetExpenses(int id)
+    public async Task<IActionResult>GetExpenses(int id)
     {
         var expense = await _context.Expenses.FindAsync(id);
         if(expense is null)
@@ -73,25 +73,23 @@ public class ExpenseController : ControllerBase
 
         [HttpDelete("{id}")]
 
-    public async Task<IActionResult> DeleteExpense(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var expense =  await _context.Expenses.FindAsync(id);
 
-        if(expense is null)
+        if(expense == null)
         {
             return NotFound();
         }
 
-        _context.Expenses.Remove(expense);
-        await _context.SaveChangesAsync();
-
-        return Ok(expense);
-
-
+        _context.Remove(expense);
+          var result = await _context.SaveChangesAsync();
+            if (result > 0) {
+                return Ok("Expense was deleted successfully");
+            }
+            return BadRequest();
+        }
     }
-
-
-}
 
     // [HttpDelete("{id:int}")]
     // public async Task<ActionResult> Delete(int id)

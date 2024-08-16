@@ -1,86 +1,89 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
+import axios from "axios";
+import { useState } from "react";
 import categories from "../categories";
+import { BASE_URL } from "../constant";
+import { Expense } from "../App";
 
-const schema = z.object({
-  description: z.string().min(1, { message: "Description is required" }),
-  amount: z.number({ required_error: "Amount is required" }).min(0.01, { message: "Amount must be greater than 0" }),
-  category: z.string().refine((val) => val !== "Select a Category", {
-    message: "Please select a category",
-  }),
-});
-
-type FormData = z.infer<typeof schema>;
 
 interface ExpenseFormProps {
-  onSubmit: (data: FormData) => void;
-  onClose: () => void;
-  expense?: FormData | null;
+  fetchData: () => void;
+  currentData?: Expense
+
 }
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSubmit, onClose, expense }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: expense || undefined,
-  });
+export const ExpenseForm = ({ fetchData, currentData }: ExpenseFormProps) => {
+  const [expense, setExpense] = useState({
+    id: currentData?.id || 0,
+    description: currentData?.description || '',
+    amount: currentData?.amount || '',
+    category: currentData?.category || ''
+  })
 
-  const onSubmitHandler = (data: FormData) => {
-    onSubmit(data);
-  };
+  const addExpense = () => {
+    axios
+    .post(`${BASE_URL}/api/Expense`)
+      .then(response => {
+        console.log(response);
+        fetchData();
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
 
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)} className="mb-3">
+
+    <form>
       <div className="mb-3">
-        <label htmlFor="description" className="form-label">Description</label>
+        <label htmlFor="description" className="form-label">
+          Description
+        </label>
         <input
-          {...register("description")}
+          onChange={(e) => setExpense({ ...expense, description: e.target.value })}
           id="description"
           type="text"
-          className={`form-control ${errors.description ? "is-invalid" : ""}`}
+          className="form-control"
+          value={expense.description}
         />
-        {errors.description && <div className="invalid-feedback">{errors.description.message}</div>}
       </div>
-
       <div className="mb-3">
-        <label htmlFor="amount" className="form-label">Amount</label>
+        <label htmlFor="amount" className="form-label">
+          Amount
+        </label>
         <input
-          {...register("amount", { valueAsNumber: true })}
+          onChange={(e) => setExpense({ ...expense, amount: e.target.value })}
           id="amount"
           type="number"
-          step="0.01"
-          className={`form-control ${errors.amount ? "is-invalid" : ""}`}
+          className="form-control"
+          value={expense.amount}
         />
-        {errors.amount && <div className="invalid-feedback">{errors.amount.message}</div>}
       </div>
-
       <div className="mb-3">
-        <label htmlFor="category" className="form-label">Category</label>
+        <label htmlFor="category" className="form-label">
+          Category
+        </label>
         <select
-          {...register("category")}
+          onChange={(e) => setExpense({ ...expense, category: e.target.value })}
           id="category"
-          className={`form-select ${errors.category ? "is-invalid" : ""}`}
+          className="form-select"
+          value={expense.category}
         >
-          <option value="Select a Category">Select a Category</option>
+          <option value=""></option>
           {categories.map((category) => (
             <option key={category} value={category}>
               {category}
             </option>
           ))}
         </select>
-        {errors.category && <div className="invalid-feedback">{errors.category.message}</div>}
       </div>
-
-      <button type="submit" className="btn btn-primary me-2">
-        {expense ? "Update" : "Add"} Expense
-      </button>
-      <button type="button" className="btn btn-secondary" onClick={onClose}>
-        Cancel
+      <button
+        onClick={addExpense}
+        type="button"
+        className="btn btn-outline-primary"
+      >
+        Submit
       </button>
     </form>
   );
