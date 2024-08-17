@@ -27,11 +27,8 @@ import { BASE_URL } from "../constant";
 
 interface Expense {
   id: number;
-  // name: string;
-  // price: number;
   description: string;
-  price: number;
-
+  amount: number;
  category: string;
 }
 
@@ -58,12 +55,9 @@ const ExpenseSkeleton = () => {
             <Thead>
               <Tr>
                 <Th><Skeleton>Id</Skeleton></Th>
-                {/* <Th><Skeleton>Name</Skeleton></Th> */}
                 <Th><Skeleton>Description</Skeleton></Th>
-                {/* <Th><Skeleton>IsinStock</Skeleton></Th> */}
                 <Th isNumeric><Skeleton>Amount</Skeleton></Th>
                 <Th><Skeleton>Category</Skeleton></Th>
-                {/* <Th isNumeric><Skeleton>Price</Skeleton></Th> */}
               </Tr>
             </Thead>
             <Tbody>
@@ -74,7 +68,6 @@ const ExpenseSkeleton = () => {
                     <HStack>
                       <SkeletonCircle>AD</SkeletonCircle>
                       <Td><Skeleton>Expense Description</Skeleton></Td>
-                      {/* <Text><Skeleton>Expense Name</Skeleton></Text> */}
                     </HStack>
                   </Td>
 

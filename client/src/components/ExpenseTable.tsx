@@ -34,12 +34,11 @@ import ExpenseForm from "./ExpenseForm";
 import ViewDetails from "./ViewDetails";
 import ExpenseSkeleton from "./ExpenseSkeleton";
 
-export interface Expense {
+interface Expense {
   id: number;
-  name: string;
-  price: string;
   description: string;
-  isInStore: boolean;
+  amount: number;
+  category: string;
 }
 
 const ExpenseTable = () => {
@@ -163,7 +162,7 @@ const ExpenseTable = () => {
                     </HStack>
                   </Td>
 
-                  {/* <Td>{expense.description}</Td> */}
+                  <Td>{expense.description}</Td>
                   {/* <Td>
                     <Badge>{expense.isInStore ? "Yes" : "No"}</Badge>
                   </Td> */}
