@@ -32,7 +32,7 @@ const ExpenseList = ({ expenses, onDelete, onUpdate }: ExpenseListProps) => {
   const onSave = (id: number) => {
     if (editedExpense) {
       axios
-        .put(`${BASE_URL}/api/Expense/${id}`, editedExpense)
+        .put(`${BASE_URL}/api/Expense${id}`, editedExpense)
         .then(() => {
           setEditingId(null);
           setEditedExpense(null);

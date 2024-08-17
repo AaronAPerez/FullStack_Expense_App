@@ -31,7 +31,7 @@ const schema = z
 
 type FormData = z.infer<typeof schema>;
 
-export interface ExpenseFormProps {
+interface ExpenseFormProps {
   onSubmit: (data: FormData) => void;
   fetchData: () => void;
   currentData?: Expense;

@@ -17,6 +17,7 @@ interface Expense {
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [currentData, setCurrentData] = useState<Expense>({} as Expense);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -27,6 +28,7 @@ const App = () => {
     axios
       .get<Expense>(`${BASE_URL}/api/Expense` + id)
       .then(response => {
+        setCurrentData(response.data)
         console.log((response))
         // setExpenses(response.data);
       })
