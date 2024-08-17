@@ -1,78 +1,98 @@
-import { useEffect, useState } from "react";
-import ExpenseForm from "./components/ExpenseForm";
+import { useState, useEffect } from "react";
 import ExpenseFilter from "./components/ExpenseFilter";
+import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
-import categories from "./categories";
-import { BASE_URL } from "./constant";
+import { FaPiggyBank } from "react-icons/fa";
 import axios, { CanceledError } from "axios";
+import { BASE_URL } from "./constant";
+import { Expense } from './components/ExpenseList';
 
-export interface Expense {
+interface Expense {
   id: number;
   description: string;
   amount: number;
   category: string;
-};
+}
 
 const App = () => {
-  const [data, setData] = useState<Expense[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
 
-  const fetchData = () =>{
+
+  const fetchData = (id:number) => {
+    setIsLoading(true);
     axios
-    .get(`${BASE_URL} + "Expense"`)
-    .then(response => {
-        setData(response.data);
-    })
-    .catch(error => {
-        if(error instanceof CanceledError){
-            return
-        }
-        setError(error.message);
-        // console.log("error debug: "+ error);
-
-    }).finally(()=>{
+      .get<Expense>(`${BASE_URL}/api/Expense` + id)
+      .then(response => {
+        console.log((response))
+        // setExpenses(response.data);
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => {
         setIsLoading(false);
-    })
-    // console.log("Data debug: "+ data);
-}
+      });
+  };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+  
+
+
+
+  const visibleExpenses = selectedCategory
+    ? expenses.filter((e) => e.category === selectedCategory)
+    : expenses;
+
+  const handleDelete = (id: number) => {
+    axios
+      .delete(`${BASE_URL}/api/Expense`)
+      .then(() => {
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const handleSubmit = (expense: Omit<Expense, 'id'>) => {
+    setExpenses([...expenses, { ...expense, id: expenses.length + 1 }]);
+  };
 
   return (
-    <>
-      <h1 className="text-center">Expense Tracker</h1>
-      <div className="container">
-        <div className="mb-5">
-          <ExpenseForm
+    <div className="container">
+      <header className="py-2 border-bottom">
+        <h1 className="text-center">
+          EXPENSE TR
+          <FaPiggyBank size={59} color="pink" />
+          CKER
+        </h1>
+      </header>
+      <div className="main">
+        <div className="row">
+          <div className="col-md-4">
+            <ExpenseForm onSubmit={handleSubmit} fetchData={fetchData} />
+          </div>
+          <div className="col-md-8 pt-2">
+            <ExpenseFilter
+              onSelectCategory={(category) => setSelectedCategory(category)}
+            />
+            {isLoading && <p>Loading...</p>}
+            {error && <p className="text-danger">Error: {error}</p>}
+            <ExpenseList
+            expenses={visibleExpenses} 
             fetchData={fetchData}
-          />
-        </div>
-
-        <div className="m-5">
-          <ExpenseFilter
-            onSelectCategory={(category) => setSelectedCategory(category)}
-          />
-        </div>
-        <div className="m-5">
-          <ExpenseList
-            category={selectedCategory}
-            setExpenseArray={setData}
-            expenses={data}
-            fetchData={fetchData}
-          />
+            onDelete={handleDelete} />
+          </div>
         </div>
       </div>
-
-    </>
+    </div>
   );
 };
 
 export default App;
-
-
-
-

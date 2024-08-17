@@ -1,7 +1,3 @@
-const categories = ['All','Groceries', 'Utils', 'Entertainment', 'Food', 'Shopping'];
+const categories = ['Groceries', 'Utilities', 'Entertainment', 'Shopping', 'Other', 'Transportation', 'Food'];
 
 export default categories;
-
-// const categories = ['Groceries', 'Utilities', 'Entertainment', 'Shopping', 'Other', 'Transportation', 'Food'];
-
-// export default categories;
