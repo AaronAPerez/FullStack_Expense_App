@@ -6,13 +6,12 @@ namespace api.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        // [Required]
         public string? Description { get; set; }
 
-        [Required]
+
         public decimal Amount { get; set; }
 
-        [Required]
-        public string? Category { get; set; }
+          public string? Category { get; set; }
     }
 }

@@ -23,10 +23,10 @@ const App = () => {
 
 
 
-  const fetchData = (id:number) => {
+  const fetchData = () => {
     setIsLoading(true);
     axios
-      .get<Expense>(`${BASE_URL}/api/Expense` + id)
+      .get(`${BASE_URL}/api/Expense`)
       .then(response => {
         setCurrentData(response.data)
         console.log((response))
@@ -40,9 +40,9 @@ const App = () => {
       });
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
   
 
 
