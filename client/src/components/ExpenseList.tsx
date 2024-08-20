@@ -1,59 +1,31 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { BASE_URL } from '../constant';
-
-interface Expense {
-  id: number;
-  description: string;
-  amount: number;
-  category: string;
-}
+import { Expense } from '../App';
 
 interface ExpenseListProps {
   expenses: Expense[];
   onDelete: (id: number) => void;
-  onUpdate: () => void; // New prop for updating the expenses list
+  fetchData: () => void;
 }
 
-const ExpenseList = ({ expenses, onDelete, onUpdate }: ExpenseListProps) => {
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editedExpense, setEditedExpense] = useState<Expense | null>(null);
-
-  if (expenses.length === 0) return null;
-
-  const onEdit = (id: number) => {
-    setEditingId(id);
-    const expenseToEdit = expenses.find((expense) => expense.id === id);
-    if (expenseToEdit) {
-      setEditedExpense({ ...expenseToEdit });
+// ExpenseList component for displaying the list of expenses
+const ExpenseList = ({ expenses, onDelete, fetchData
+}: ExpenseListProps) => {
+  // Handle delete button click
+  const handleDelete = (id: number) => {
+    if (window.confirm('Are you sure you want to delete this expense?')) {
+      onDelete(id);
     }
   };
 
-  const onSave = (id: number) => {
-    if (editedExpense) {
-      axios
-        .put(`${BASE_URL}/api/Expense/${id}`, editedExpense)
-        .then(() => {
-          setEditingId(null);
-          setEditedExpense(null);
-          onUpdate(); // Call the onUpdate function to refetch or update the expenses list
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
+  // Render loading state if no expenses
+  if (expenses.length === 0) {
+    return (
+      <div className="text-center">
+        <p>No expenses found.</p>
+      </div>
+    );
+  }
 
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    if (editedExpense) {
-      setEditedExpense({
-        ...editedExpense,
-        [e.target.name]: e.target.value,
-      });
-    }
-  };
-
+  // Render the expense list table
   return (
     <>
       <div className="container">
@@ -70,84 +42,29 @@ const ExpenseList = ({ expenses, onDelete, onUpdate }: ExpenseListProps) => {
             <tbody>
               {expenses.map((expense) => (
                 <tr key={expense.id}>
+                  <td>{expense.description}</td>
+                  <td>${expense.amount.toFixed(2)}</td>
+                  <td>{expense.category}</td>
                   <td>
-                    {editingId === expense.id ? (
-                      <input
-                        type="text"
-                        name="description"
-                        value={editedExpense?.description || ''}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      expense.description
-                    )}
-                  </td>
-                  <td>
-                    {editingId === expense.id ? (
-                      <input
-                        type="number"
-                        name="amount"
-                        value={editedExpense?.amount || ''}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      `$${expense.amount}`
-                    )}
-                  </td>
-                  <td>
-                    {editingId === expense.id ? (
-                      <select
-                        name="category"
-                        value={editedExpense?.category || ''}
-                        onChange={handleInputChange}
-                      >
-                        <option value="Groceries">Groceries</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Other">Other</option>
-                        <option value="Shopping">Shopping</option>
-                      </select>
-                    ) : (
-                      expense.category
-                    )}
-                  </td>
-                  <td>
-                    {editingId === expense.id ? (
-                      <button
-                        className="btn btn-outline-success"
-                        onClick={() => onSave(expense.id)}
-                      >
-                        Save
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          className="btn btn-outline-danger"
-                          onClick={() => onDelete(expense.id)}
-                        >
-                          Delete
-                        </button>
-                        <button
-                          className="btn btn-outline-warning ms-2"
-                          onClick={() => onEdit(expense.id)}
-                        >
-                          Edit
-                        </button>
-                      </>
-                    )}
+                    <button
+                      className="btn btn-outline-danger"
+                      onClick={() => handleDelete(expense.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
+              {/* Calculate and display total expenses */}
               <tr>
                 <td className="tableHeadFoot">Total Expenses</td>
                 <td className="tableHeadFoot">
                   $
                   {expenses
                     .reduce(
-                      (total, expense) => total + (expense.amount),
+                      (total, expense) => total + parseInt(expense.amount),
                       0
                     )
                     .toFixed(2)}
@@ -157,9 +74,6 @@ const ExpenseList = ({ expenses, onDelete, onUpdate }: ExpenseListProps) => {
               </tr>
             </tfoot>
           </table>
-          {
-            expenses.length == 0 && <header> No DATA </header>
-          }
         </div>
       </div>
     </>

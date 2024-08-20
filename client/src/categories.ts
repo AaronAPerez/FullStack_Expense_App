@@ -1,3 +1,3 @@
-const categories = ['Groceries', 'Utilities', 'Entertainment', 'Shopping', 'Other', 'Transportation', 'Food'];
+const categories = ['Groceries', 'Utilities', 'Entertainment', 'Shopping', 'Transportation', 'Food', 'Other' ];
 
 export default categories;
