@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import ExpenseFilter from "./components/ExpenseFilter";
 import ExpenseForm from "./components/ExpenseForm";
-import ExpenseList from "./components/ExpenseList";
+import ExpenseList from './components/ExpenseList';
 import { FaPiggyBank } from "react-icons/fa";
 import axios, { CanceledError } from "axios";
 import { BASE_URL } from "./constant";
 import { Expense } from './components/ExpenseList';
 
-interface Expense {
+export interface Expense {
   id: number;
   description: string;
   amount: number;
@@ -17,8 +17,9 @@ interface Expense {
 const App = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [currentData, setCurrentData] = useState<Expense>({} as Expense);
+  // const [currentData, setCurrentData] = useState<Expense>({} as Expense);
   const [error, setError] = useState('');
+  const [editingExpense, setEditingExpense] = useState<Expense | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
@@ -26,11 +27,10 @@ const App = () => {
   const fetchData = () => {
     setIsLoading(true);
     axios
-      .get(`${BASE_URL}/api/Expense`)
+      .get(`${BASE_URL}`)
       .then(response => {
-        setCurrentData(response.data)
+        setExpenses(response.data)
         console.log((response))
-        // setExpenses(response.data);
       })
       .catch(error => {
         console.log(error)
@@ -78,7 +78,8 @@ const App = () => {
       <div className="main">
         <div className="row">
           <div className="col-md-4">
-            <ExpenseForm onSubmit={handleSubmit} fetchData={fetchData} />
+            {/* <ExpenseForm onSubmit={handleSubmit} fetchData={fetchData} /> */}
+            <ExpenseForm fetchData={fetchData} currentData={editingExpense} /> 
           </div>
           <div className="col-md-8 pt-2">
             <ExpenseFilter

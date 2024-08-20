@@ -5,9 +5,11 @@ import { Expense } from './ExpenseList';
 import { z } from 'zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import categories from '../categories';
 
 // Zod schema for form validation
-const schema = z.object({
+const schema = z
+.object({
   description: z
   .string()
   .min(1, { message: "Required field - Enter at least one character" }),
@@ -54,7 +56,7 @@ const ExpenseForm = ({ onSubmit, fetchData, currentData }: ExpenseFormProps) => 
   };
 
   const editExpense = (data: FormData) => {
-    axios.put(`${BASE_URL}/Expense/${currentData?.id}`, data)
+    axios.put(`${BASE_URL}${currentData?.id}`, data)
       .then(() => {
         fetchData();
         reset();
@@ -67,7 +69,7 @@ const ExpenseForm = ({ onSubmit, fetchData, currentData }: ExpenseFormProps) => 
   };
 
   const addExpense = (data: FormData) => {
-    axios.post(BASE_URL + "Expense", data)
+    axios.post(`${BASE_URL}`, data)
       .then((response) => {
         onSubmit(response.data);
         fetchData();
@@ -109,10 +111,13 @@ const ExpenseForm = ({ onSubmit, fetchData, currentData }: ExpenseFormProps) => 
           className={`form-select ${errors.category ? 'is-invalid' : ''}`}
           id="category"
         >
-          <option value="">Select category</option>
-          <option value="Groceries">Groceries</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Entertainment">Entertainment</option>
+            <option value="">All Categories</option>
+              {/* Render options for each category */}
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
           {/* Add more categories as needed */}
         </select>
         {errors.category && <div className="invalid-feedback">{errors.category.message}</div>}

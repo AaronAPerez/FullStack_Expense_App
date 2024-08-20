@@ -12,6 +12,6 @@ namespace api.Models
 
         public decimal Amount { get; set; }
 
-          public string? Category { get; set; }
+        public string? Category { get; set; }
     }
 }
