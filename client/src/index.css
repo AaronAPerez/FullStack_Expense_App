@@ -3,25 +3,25 @@
 
 
 body {
- background-image: url('./assets/images/Money-Benjamin-unsplash.jpg');
- background-position: center;
- background-size: cover;
- background-repeat: no-repeat;
- background-attachment: fixed;
- font-family: "Besley", serif;
+  background-image: url('./assets/images/Money-Benjamin-unsplash.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: "Besley", serif;
 }
 
 
-.table :not(caption) > * > *, .form-control, .form-select{
-  background-color: #dee5dae5;
-  /* padding-left: 0.4rem;
-  padding-right: 0.4rem; */
-}
+.table :not(caption) > * > *, .form-control, .form-select {
+    background-color: rgba(224, 237, 222, 0.9); /* Lighter green with transparency */
+    border: 1px solid #004d00;
+  }
 
-svg{
-  padding-bottom: 14px;
-  padding-right: 2px;
-} 
+.btn-outline-success{
+ padding: 2%;
+ margin: 2%;
+ border: none;
+}
 
 td{
   font-size: large;
@@ -32,28 +32,34 @@ td{
   background-color: #030403 !important;
 }
 
+
 .text-danger {
  background-color: #030403;
 }
 
-
 h1.text-center {
-/* color: #f4f6f2; */
-color: #f4f6f2;
-font-size: 3.2rem;
-text-shadow: 2px 2px #0b0e0a;
-font-weight: 600;
+  color: #004d00;
+  font-size: 3.2rem;
+  text-shadow: 1px 1px #e0edde;
+  font-weight: 600;
+  letter-spacing: 2px;
 }
 
 .form-label {
+  font-size: 22px !important;
+  margin-bottom: 4px;
   color: #f4f6f2;
   font-size: large;
   text-shadow: 2px 2px #0b0e0a;
   margin-bottom: 4px;
-}
+} 
 
 input, .form-select {
   border-radius: 0px !important;
+}
+
+.invalid-feedback{
+  background-color: #000000;
 }
 
 
@@ -73,12 +79,14 @@ input, .form-select {
 
 .btn-success{
   display: block;
-  width: 14rem;
+  width: 12rem;
   height: 2.8rem;
   font-weight: bold;
   text-decoration: none;
   text-align: center;
   color: #fff;
+  background-color: #004d00;
+  border-color: #004d00;
   letter-spacing: 1px;
   border: 3px solid #333;
   transition: all 0.35s;
@@ -97,7 +105,7 @@ input, .form-select {
 }
 
 .icon svg {
-  width: 30px;
+  width: 35px;
   position: absolute;
   top: calc(50% - 15px);
   left: calc(50% - 15px);
@@ -107,18 +115,22 @@ input, .form-select {
 }
 
 .btn-success:hover {
-  width: 20rem;
+  width: 15rem;
   border: 3px solid #2ecc71;
   background: rgba(0, 114, 0, 0.856);
   color: #2ecc71;
 }
+
 
 .btn-success:hover + .icon{
   border: 3px solid #0b5a2c;
   right: -25%;
   background-color: black;
 }
-
+.btn-outline-danger {
+  color: #8b0000; /* Dark red */
+  border-color: #8b0000;
+}
 
 .btn-outline-danger {
   color: red;
@@ -126,6 +138,11 @@ input, .form-select {
   font-weight: 500;
   transition: all 0.5s;
   position: relative; 
+}
+
+.btn-outline-danger:hover {
+  background-color: #8b0000;
+  color: #e0edde;
 }
 
 .btn-outline-danger span {

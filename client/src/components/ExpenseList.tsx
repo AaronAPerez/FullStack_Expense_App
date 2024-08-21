@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Expense } from "../App";
 import axios from "axios";
 import { BASE_URL } from "../constant";
+import { FaRegTrashCan } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
 
 
 interface ExpenseListProps {
@@ -15,7 +17,6 @@ interface ExpenseListProps {
 
 // ExpenseList component for displaying the list of expenses
 const ExpenseList = ({
-  category,
   expenses,
   onDelete,
   fetchData,
@@ -29,7 +30,6 @@ const ExpenseList = ({
   });
 
   
-
 
   const startEdit = (id: number) => {
     setEditId(id);
@@ -61,8 +61,7 @@ const ExpenseList = ({
     stopEdit();
   };
 
-  const handleDelete = (id: number) => {
-
+  const handleDelete= (id: number) => {
     axios
       .delete(`${BASE_URL}${id}`)
       .then(() => {
@@ -75,12 +74,7 @@ const ExpenseList = ({
       });
   };
 
-  // Handle delete button click
-  // const handleDelete = (id: number) => {
-  //   if (window.confirm('Are you sure you want to delete this expense?')) {
-  //     onDelete(id);
-  //   }
-  // };
+
 
   // Render loading state if no expenses
   if (expenses.length === 0) {
@@ -152,18 +146,18 @@ const ExpenseList = ({
                     <td>{expense.category}</td>
                     <td>
                       <button
-                        className="btn btn-outline-success mx-2"
+                        className="btn btn-outline-success" title="Edit Expense"
+                        
                         onClick={() => startEdit(expense.id)}
                       >
-                        Edit
+                     <FaEdit size={35} />
                       </button>
-                      <button className="btn btn-outline-danger" id="button" onClick={() => onDelete(expense.id)}>
-                        Delete
+                      <button className="btn btn-outline-danger" id="button"  title="Delete Expense" onClick={() => onDelete(expense.id)}>
+                      <FaRegTrashCan color="red" size={25} />
                       </button>
                     </td>
                   </tr>
-                )
-              )}
+                ))}
             </tbody>
             <tfoot>
               {/* Calculate and display total expenses */}

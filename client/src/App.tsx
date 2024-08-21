@@ -31,17 +31,10 @@ const App = () => {
     axios
       .get<Expense[]>(`${BASE_URL}`)
       .then(response => 
-        setExpenses(response.data)) // Update the todos state with the fetched data
+        setExpenses(response.data)) // Update the Expenses state with the fetched data
         .catch((error) => setError(error.message)); // Set the error message if an error occurs
     };
-  //       if (error instanceof CanceledError) {
-  //         console.log("Request was canceled");
-  //       } else {
-  //         console.log("The error is " + error.message);
-  //         setError(error.message);
-  //       }
-  //     });
-  // }, []);
+
 
 
 
@@ -62,8 +55,6 @@ const App = () => {
     fetchData();
   }, []);
 
-  // const handleSubmit = (expense: Expense) => {
-  //   setEditExpense(expense);
 
     return (
       <>
@@ -71,7 +62,7 @@ const App = () => {
           <header className="py-2 border-bottom">
             <h1 className="text-center">
               EXPENSE TR
-              <FaPiggyBank size={59} color="pink" />
+              <FaPiggyBank size={52} color="pink" />
               CKER
             </h1>
           </header>

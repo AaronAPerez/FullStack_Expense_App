@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import categories from '../categories';
+import { MdFormatListBulletedAdd } from "react-icons/md";
 
 // Zod schema for form validation
 const schema = z
@@ -28,7 +29,6 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 interface ExpenseFormProps {
-  // onSubmit: (expense: Omit<Expense, 'id'>) => void;
   onSubmit: (expense: Expense) => void;
   fetchData: () => void;
   currentExpense?: Expense;
@@ -62,42 +62,39 @@ const ExpenseForm = ({ fetchData, currentExpense }: ExpenseFormProps) => {
 
   const addExpense = (data: FormData) => {
     axios
-    .post(`${BASE_URL}`, data)
-    .then((response) => {
-      submitHandler(response.data);
-      console.log(response);
-      alert('Expense added successfully');
-      fetchData();
-      reset();
-    })
-    .catch((error) =>
-      console.log(error));
-      alert('Error adding expense');
-  
-};
+      .post(`${BASE_URL}`, data)
+      .then((response) => {
+        submitHandler(response.data);
+        fetchData();
+        reset();
+        alert('Expense added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding expense:', error);
+      })
+  };
 
-    const editExpense = (data: FormData) => {
-      axios
-        .put(`${BASE_URL}${currentExpense.id}`, data)
-        .then((response) => {
-          submitHandler(response.data);
-          console.log(response);
-          alert('Expense updated successfully');
-          fetchData();
-          reset();
-        })
-        .catch((error) =>
-          console.log(error));
-      alert('Error updating expense');
+  const editExpense = (data: FormData) => {
+    axios
+      .put(`${BASE_URL}${currentExpense.id}`, data)
+      .then((response) => {
+        submitHandler(response.data);
+        console.log(response);
+        alert('Expense updated successfully');
+        fetchData();
+        reset();
+      })
+      .catch((error) =>
+        console.log(error));
+    alert('Error updating expense');
+  };
 
-  
-};
-     
   // Render the expense form
   return (
     <>
+    <div className="container">
       <form onSubmit={handleSubmit(submitHandler)}>
-        <div className="mb-3">
+        <div className="my-3">
           <label htmlFor="description" className="form-label">Description</label>
           <input
             {...register("description")}
@@ -119,26 +116,42 @@ const ExpenseForm = ({ fetchData, currentExpense }: ExpenseFormProps) => {
           {errors.amount && <div className="invalid-feedback">{errors.amount.message}</div>}
         </div>
         <div className="mb-3">
-          <label htmlFor="category" className="form-label">Category</label>
+          <label htmlFor="category" className="form-label"></label>
           <select
             {...register("category")}
             id="category"
-            >
-            className={`form-select ${errors.category ? 'is-invalid' : ''}`}
-          
+            className="form-select"
+             >
             <option value="">Select Category</option>
+            {/* // Map callback function to pass in category */}
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
             ))}
           </select>
-          {errors.category && <div className="invalid-feedback">{errors.category.message}</div>}
+          {errors.category && (
+              <p className="text-danger">{errors.category.message}</p>
+            )}
         </div>
-        <button className="btn btn-success" id="submitButton">
-          {currentExpense?.id ? 'Update Expense' : 'Add Expense'}
-        </button>
+        <div className="wrapper">
+          <div className="link_wrapper">
+            <button className="btn btn-success" id="submitButton">
+              {currentExpense?.id ? 'Update Expense' : 'Add Expense'}
+              <MdFormatListBulletedAdd size={25} id="addIcon" />
+            </button>
+            <div className="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 268.832 268.832"
+              >
+                <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </form>
+      </div>
     </>
   );
 };
