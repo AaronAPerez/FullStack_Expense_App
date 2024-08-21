@@ -1,20 +1,86 @@
-import { Expense } from '../App';
+
+import { useState } from "react";
+import { Expense } from "../App";
+import axios from "axios";
+import { BASE_URL } from "../constant";
+
 
 interface ExpenseListProps {
   expenses: Expense[];
   onDelete: (id: number) => void;
   fetchData: () => void;
+  category: string;
 }
 
+
 // ExpenseList component for displaying the list of expenses
-const ExpenseList = ({ expenses, onDelete, fetchData
+const ExpenseList = ({
+  category,
+  expenses,
+  onDelete,
+  fetchData,
 }: ExpenseListProps) => {
-  // Handle delete button click
-  const handleDelete = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this expense?')) {
-      onDelete(id);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [currentExpense, setCurrentExpense] = useState<Expense>({
+    id: 0,
+    description: "",
+    amount: 0,
+    category: "",
+  });
+
+  
+
+
+  const startEdit = (id: number) => {
+    setEditId(id);
+    const foundExpense = expenses.find((expense) => expense.id === id);
+    if (foundExpense) {
+      setCurrentExpense({ ...foundExpense });
     }
   };
+
+  const stopEdit = () => {
+    setEditId(null);
+    setCurrentExpense({
+      id: 0,
+      description: "",
+      amount: 0,
+      category: "",
+    });
+  };
+
+  const saveExpense = (id: number) => {
+    if (currentExpense) {
+      axios
+        .put(`${BASE_URL}${id}`, currentExpense)
+        .then(() => {
+          fetchData();
+        })
+        .catch((error) => console.log(error.message));
+    }
+    stopEdit();
+  };
+
+  const handleDelete = (id: number) => {
+
+    axios
+      .delete(`${BASE_URL}${id}`)
+      .then(() => {
+        setExpenses(expenses.filter((expense) => expense.id !== id));
+        fetchData();
+      })
+      .catch(error => {
+        console.log(error);
+        setError('Error deleting expense');
+      });
+  };
+
+  // Handle delete button click
+  // const handleDelete = (id: number) => {
+  //   if (window.confirm('Are you sure you want to delete this expense?')) {
+  //     onDelete(id);
+  //   }
+  // };
 
   // Render loading state if no expenses
   if (expenses.length === 0) {
@@ -28,7 +94,7 @@ const ExpenseList = ({ expenses, onDelete, fetchData
   // Render the expense list table
   return (
     <>
-      <div className="container">
+     <div className="container">
         <div className="table-responsive">
           <table className="table table-bordered border-success">
             <thead>
@@ -40,21 +106,64 @@ const ExpenseList = ({ expenses, onDelete, fetchData
               </tr>
             </thead>
             <tbody>
-              {expenses.map((expense) => (
-                <tr key={expense.id}>
-                  <td>{expense.description}</td>
-                  <td>${expense.amount.toFixed(2)}</td>
-                  <td>{expense.category}</td>
-                  <td>
-                    <button
-                      className="btn btn-outline-danger"
-                      onClick={() => handleDelete(expense.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {expenses.map((expense) => 
+                editId === expense.id ? (
+                  <tr key={expense.id}>
+                    <td>
+                      <input
+                        type="text"
+                        value={currentExpense.description}
+                        onChange={(e) =>
+                          setCurrentExpense({ ...currentExpense, description: e.target.value })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={currentExpense.amount}
+                        onChange={(e) =>
+                          setCurrentExpense({ ...currentExpense, amount: parseFloat(e.target.value) })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={currentExpense.category}
+                        onChange={(e) =>
+                          setCurrentExpense({ ...currentExpense, category: e.target.value })
+                        }
+                      />
+                    </td>
+                    <td>
+                      <button className="btn btn-outline" id="button" onClick={() => saveExpense(expense.id)}>
+                        Update
+                      </button>
+                      <button className="btn btn-outline" id="button" onClick={stopEdit}>
+                        Cancel
+                      </button>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr key={expense.id}>
+                    <td>{expense.description}</td>
+                    <td>${expense.amount.toFixed(2)}</td>
+                    <td>{expense.category}</td>
+                    <td>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => startEdit(expense.id)}
+                      >
+                        Edit
+                      </button>
+                      <button className="btn btn-outline" id="button" onClick={() => onDelete(expense.id)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
             <tfoot>
               {/* Calculate and display total expenses */}
@@ -75,7 +184,7 @@ const ExpenseList = ({ expenses, onDelete, fetchData
             </tfoot>
           </table>
         </div>
-      </div>
+       </div>
     </>
   );
 };

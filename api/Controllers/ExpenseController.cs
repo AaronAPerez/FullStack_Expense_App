@@ -19,89 +19,78 @@ namespace api.Controllers
             _context = context;
         }
 
-        // [HttpGet]
-        [HttpGet("GetExpenses")]
-        public async Task<IEnumerable<Expense>> GetExpense()
-        {
-                 var expenses = await _context.Expenses.AsNoTracking().ToListAsync();
-            return expenses;
-        }
 
-        // [HttpPost]
-        [HttpPost("AddExpense")]
+    [HttpGet]
+    public async Task<IEnumerable<Expense>> GetExpense()
+    {
+        var expenses = await _context.Expenses.AsNoTracking().ToListAsync();
+        return expenses;
+    }
+
+        
+        [HttpPost]
         public async Task<IActionResult> Create (Expense expense)
         {  if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             await _context.AddAsync(expense);
+ 
 
-            var result = await _context.SaveChangesAsync();
+        var result = await _context.SaveChangesAsync();
 
-            if (result > 0)
-            {
-                return Ok();
-            }
-            return BadRequest();
+        if (result > 0)
+        {
+            return Ok("Expense Created Successfully");
         }
 
+        return NotFound("Expense Not Created");
 
-        
+    }
 
-           // Delete Expense Item
-        [HttpDelete("Delete/{id:int}")]
-        public async Task<IActionResult> DeleteExpense(int id)
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var expense = await _context.Expenses.FindAsync(id);
+        if (expense == null)
         {
-            var expense = await _context.Expenses.FindAsync(id);
-            if(expense == null)
-            {
-                return NotFound();
-            }
-
-            _context.Remove(expense);
-
-            var result = await _context.SaveChangesAsync();
-
-            if (result > 0)
-            {
-                return Ok("Expense item deleted");
-            }
-
-            return BadRequest("Unable to delete expense item");
+            return NotFound("Expense Not Found");
         }
+        _context.Remove(expense);
 
-         // Edit Expense Item by id
-        [HttpPut("Edit/{id:int}")]
-        public async Task<IActionResult> EditExpense(int id, Expense expense)
+        var result = await _context.SaveChangesAsync();
+
+        if (result > 0)
         {
-            // save the expense from the database found by id
-            var expenseFromDb = await _context.Expenses.FindAsync(id);
+            return Ok("Expense deleted successfully");
+        }
+        return BadRequest("Unable to delete Expense");
+    }
 
-            // check if the database with that id is empty & return bad request
-            if(expenseFromDb == null)
-            {
-                return BadRequest("Expense not found");  
-            }
 
-            // if expense at id is not empty then update data based upon what is taken as input
-            expenseFromDb.Description = expense.Description;
-            expenseFromDb.Amount = expense.Amount;
-            expenseFromDb.Category = expense.Category;
 
-            // save changes to the variable result
-            var result = await _context.SaveChangesAsync();
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> EditExpense(int id, Expense expense)
+    {
+        var expenseFromDb = await _context.Expenses.FindAsync(id);
 
-            // if result is not empty then return Ok
-            if(result > 0)
-            {
-                return Ok("Expense information updated for " + expense.Description);
-            }
+        if (expenseFromDb == null)
+        {
+            return BadRequest("Student Not Found");
+        }
+        expenseFromDb.Description = expense.Description;
+        expenseFromDb.Amount = expense.Amount;
+        expenseFromDb.Category = expense.Category;
 
-            // if result is empty return BadRequest with message
-            return BadRequest("Unable to update the expense item " + expense.Description);
 
+        var result = await _context.SaveChangesAsync();
+
+        if (result > 0)
+        {
+            return Ok(" Expense updated "+ expense.Description);
+        }
+        return BadRequest("Unable to update expense" + expense.Description);
         }
     }
 }
-
-  

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ExpenseFilter from "./components/ExpenseFilter";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
@@ -6,7 +6,7 @@ import { FaPiggyBank } from "react-icons/fa";
 import axios from "axios";
 import { BASE_URL } from "./constant";
 
-// Define the Expense interface to be used across components
+
 export interface Expense {
   id: number;
   description: string;
@@ -14,48 +14,43 @@ export interface Expense {
   category: string;
 }
 
-// Main App component
 const App = () => {
-  // State for managing expenses and UI
   const [selectedCategory, setSelectedCategory] = useState("");
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [currentData, setCurrentData] = useState<Expense | undefined>(undefined);
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [editExpense, setEditExpense] = useState<Expense | undefined>(undefined);
 
-  // Function to fetch expenses from the API
-  const fetchData = () => {
-    setIsLoading(true);
-    axios
-      .get(`${BASE_URL}GetExpenses/`)
-      .then(response => {
-        setExpenses(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-        setError('Error fetching expenses');
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
 
-  // Fetch expenses when the component mounts
-  useEffect(() => {
-    fetchData();
-  }, []);
 
-  // Filter expenses based on selected category
+
   const visibleExpenses = selectedCategory
-    ? expenses.filter((e) => e.category === selectedCategory)
+    ? expenses.filter((expense) => expense.category === selectedCategory)
     : expenses;
 
-  // Handle expense deletion
+  const fetchData = () => {
+    axios
+      .get<Expense[]>(`${BASE_URL}`)
+      .then(response => 
+        setExpenses(response.data)) // Update the todos state with the fetched data
+        .catch((error) => setError(error.message)); // Set the error message if an error occurs
+    };
+  //       if (error instanceof CanceledError) {
+  //         console.log("Request was canceled");
+  //       } else {
+  //         console.log("The error is " + error.message);
+  //         setError(error.message);
+  //       }
+  //     });
+  // }, []);
+
+
+
   const handleDelete = (id: number) => {
     axios
-      .delete(`${BASE_URL}Delete/${id}`)
+      .delete(`${BASE_URL}${id}`)
       .then(() => {
         setExpenses(expenses.filter((expense) => expense.id !== id));
+        fetchData();
       })
       .catch(error => {
         console.log(error);
@@ -63,45 +58,45 @@ const App = () => {
       });
   };
 
-  // Handle expense submission (add new expense)
-  const handleSubmit = (expense: Omit<Expense, 'id'>) => {
-    setExpenses([...expenses, { ...expense, id: expenses.length + 1 }]);
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  // Render the main application structure
-  return (
-    <div className="container">
-      <header className="py-2 border-bottom">
-        <h1 className="text-center">
-          EXPENSE TR
-          <FaPiggyBank size={59} color="pink" />
-          CKER
-        </h1>
-      </header>
-      <div className="main">
-        <div className="row">
-          <div className="col-md-4">
-            {/* ExpenseForm component for adding/editing expenses */}
-            <ExpenseForm onSubmit={handleSubmit} fetchData={fetchData} currentData={currentData} />
-          </div>
-          <div className="col-md-8 pt-2">
-            {/* ExpenseFilter component for filtering expenses by category */}
-            <ExpenseFilter
-              onSelectCategory={(category) => setSelectedCategory(category)}
-            />
-            {isLoading && <p>Loading...</p>}
-            {error && <p className="text-danger">{error}</p>}
-            {/* ExpenseList component for displaying the list of expenses */}
-            <ExpenseList
-              expenses={visibleExpenses} 
-              fetchData={fetchData}
-              onDelete={handleDelete}
-            />
+  // const handleSubmit = (expense: Expense) => {
+  //   setEditExpense(expense);
+
+    return (
+      <>
+        <div className="container">
+          <header className="py-2 border-bottom">
+            <h1 className="text-center">
+              EXPENSE TR
+              <FaPiggyBank size={59} color="pink" />
+              CKER
+            </h1>
+          </header>
+          <div className="main">
+            <div className="row">
+              <div className="col-md-4">
+                <ExpenseForm fetchData={fetchData} currentData={editExpense} />
+              </div>
+              <div className="col-md-8 pt-2">
+                <ExpenseFilter
+                  onSelectCategory={(category) => setSelectedCategory(category)}
+                />
+                <ExpenseList
+                  expenses={visibleExpenses}
+                  fetchData={fetchData}
+                  onDelete={handleDelete}
+                  category={selectedCategory}
+          
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
+      </>
+    );
+  };
 
-export default App;
+  export default App;

@@ -11,7 +11,8 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240819033742_Init")]
+    [Migration("20240818015843_Init")]
+
     partial class Init
     {
         /// <inheritdoc />
@@ -36,11 +37,9 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
