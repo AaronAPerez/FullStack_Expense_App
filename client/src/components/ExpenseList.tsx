@@ -152,12 +152,12 @@ const ExpenseList = ({
                     <td>{expense.category}</td>
                     <td>
                       <button
-                        className="btn btn-outline-danger"
+                        className="btn btn-outline-success mx-2"
                         onClick={() => startEdit(expense.id)}
                       >
                         Edit
                       </button>
-                      <button className="btn btn-outline" id="button" onClick={() => onDelete(expense.id)}>
+                      <button className="btn btn-outline-danger" id="button" onClick={() => onDelete(expense.id)}>
                         Delete
                       </button>
                     </td>
